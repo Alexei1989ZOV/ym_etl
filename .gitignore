@@ -1,3 +1,26 @@
+# IDE
+.idea/
+
+# Данные проекта
+data/
+logs/
+
+# Конфигурация проекта (чувствительные данные)
+.env
+.env.local
+.env.*.local
+
+# Файлы специфичные для Яндекс Маркет API
+*.zip          # Скачанные архивы отчетов
+*.csv          # CSV файлы (можно хранить временно)
+
+# Базы данных (если SQLite)
+*.db
+*.sqlite
+*.sqlite3
+
+# Кэш
+.cache/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
