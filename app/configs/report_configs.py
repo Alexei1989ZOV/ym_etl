@@ -1,0 +1,42 @@
+from decimal import Decimal
+
+TRANSFORM_CONFIGS = {
+    "sales": {
+        "columns": {
+            "DAY": {"field_name": "day", "type": str, "nullable": False},
+            "MONTH": {"field_name": "month", "type": str, "nullable": False},
+            "YEAR": {"field_name": "year", "type": int, "nullable": False},
+            "CATEGORY_NAME": {"field_name": "category_name", "type": str, "nullable": True},
+            "BRAND_NAME": {"field_name": "brand_name", "type": str, "nullable": True},
+            "OFFER_ID": {"field_name": "offer_id", "type": str, "nullable": False},
+            "OFFER_NAME": {"field_name": "offer_name", "type": str, "nullable": True},
+            "VISIBILITY_INDEX": {"field_name": "visibility_index", "type": str, "nullable": True},
+            "SHOWS": {"field_name": "shows", "type": int, "nullable": True},
+            "SHOWS_WITH_PROMOTION": {"field_name": "shows_with_promotion", "type": int, "nullable": True},
+            "SHOWS_SHARE": {"field_name": "shows_share", "type": Decimal, "nullable": True},
+            "CLICKS": {"field_name": "clicks", "type": int, "nullable": True},
+            "CLICKS_WITH_PROMOTION": {"field_name": "clicks_with_promotion", "type": int, "nullable": True},
+            "TO_CART_CONVERSION": {"field_name": "to_cart_conversion", "type": Decimal, "nullable": True},
+            "TO_CART": {"field_name": "to_cart", "type": int, "nullable": True},
+            "TO_CART_WITH_PROMOTION": {"field_name": "to_cart_with_promotion", "type": int, "nullable": True},
+            "TO_CART_SHARE": {"field_name": "to_cart_share", "type": Decimal, "nullable": True},
+            "ORDER_ITEMS": {"field_name": "order_items", "type": int, "nullable": True},
+            "ORDER_ITEMS_WITH_PROMOTION": {"field_name": "order_items_with_promotion", "type": int, "nullable": True},
+            "ORDER_ITEMS_TOTAL_AMOUNT": {"field_name": "order_items_total_amount", "type": int, "nullable": True},
+            "ORDER_ITEMS_TOTAL_AMOUNT_WITH_PROMOTION": {"field_name": "order_items_total_amount_with_promotion", "type": int, "nullable": True},
+            "TO_ORDER_CONVERSION": {"field_name": "to_order_conversion", "type": Decimal, "nullable": True},
+            "ORDER_ITEMS_SHARE": {"field_name": "order_items_share", "type": Decimal, "nullable": True},
+            "ORDER_ITEMS_DELIVERED_COUNT": {"field_name": "order_items_delivered_count", "type": int, "nullable": True},
+            "ORDER_ITEMS_DELIVERED_COUNT_WITH_PROMOTION": {"field_name": "order_items_delivered_count_with_promotion", "type": int, "nullable": True},
+            "ORDER_ITEMS_DELIVERED_TOTAL_AMOUNT": {"field_name": "order_items_delivered_total_amount", "type": int, "nullable": True},
+            "ORDER_ITEMS_DELIVERED_TOTAL_AMOUNT_WITH_PROMOTION": {"field_name": "order_items_delivered_total_amount_with_promotion", "type": int, "nullable": True},
+            "ORDER_ITEMS_DELIVERED_FROM_ORDERED_COUNT": {"field_name": "order_items_delivered_from_ordered_count", "type": int, "nullable": True},
+            "ORDER_ITEMS_DELIVERED_FROM_ORDERED_TOTAL_AMOUNT": {"field_name": "order_items_delivered_from_ordered_total_amount", "type": int, "nullable": True},
+            "ORDER_ITEMS_DELIVERED_FROM_ORDERED_TOTAL_AMOUNT_WITH_PROMOTION": {"field_name": "order_items_delivered_from_ordered_total_amount_with_promotion", "type": int, "nullable": True},
+            "ORDER_ITEMS_CANCELED_COUNT": {"field_name": "order_items_canceled_count", "type": int, "nullable": True},
+            "ORDER_ITEMS_CANCELED_BY_CREATED_AT_COUNT": {"field_name": "order_items_canceled_by_created_at_count", "type": int, "nullable": True},
+            "ORDER_ITEMS_RETURNED_COUNT": {"field_name": "order_items_returned_count", "type": int, "nullable": True},
+            "ORDER_ITEMS_RETURNED_BY_CREATED_AT_COUNT": {"field_name": "order_items_returned_by_created_at_count", "type": int, "nullable": True}
+        },
+    },
+}
