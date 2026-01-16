@@ -7,7 +7,7 @@ from decimal import Decimal
 
 class RawSalesReport(Base):
     __tablename__ = "raw_sales_reports"
-    __table_args__ = {"schema": "raw"}
+
 
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)

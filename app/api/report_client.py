@@ -3,6 +3,12 @@ from app.reports.base import BaseReport
 
 
 class ReportAPIClient(BaseAPIClient):
+    def __init__(self, api_key: str, business_id: int, campaign_id: int):
+        super().__init__()  # инициализация BaseAPIClient
+        self.api_key = api_key
+        self.business_id = business_id
+        self.campaign_id = campaign_id
+
     def get_report_id(self, response: dict) -> str:
         """Извлекает report_id из ответа API"""
         result = response.get("result")
