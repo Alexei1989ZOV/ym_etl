@@ -6,7 +6,7 @@ from app.storage.models.base_model import Base
 
 engine = create_engine(
     settings.database_url,
-    echo=True,  # можно True для дебага
+    echo=False,  # можно True для дебага
     pool_pre_ping=True,
 )
 

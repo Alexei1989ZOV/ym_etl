@@ -39,4 +39,27 @@ TRANSFORM_CONFIGS = {
             "ORDER_ITEMS_RETURNED_BY_CREATED_AT_COUNT": {"field_name": "order_items_returned_by_created_at_count", "type": int, "nullable": True}
         },
     },
+    "stocks": {
+        "columns": {
+            "SHOP_SKU" : {"field_name": "shop_sku", "type": str, "nullable": False},
+            "ARTICLE": {"field_name": "article", "type": str, "nullable": True},
+            "MARKET_SKU": {"field_name": "market_sku", "type": int, "nullable": True},
+            "PRODUCT_NAME": {"field_name": "product_name", "type": str, "nullable": True},
+            "VALID": {"field_name": "valid", "type": int, "nullable": False},
+            "RESERVED": {"field_name": "reserved", "type": int, "nullable": False},
+            "AVAILABLE_FOR_ORDER" : {"field_name": "available_for_order", "type": int, "nullable": False},
+            "QUARANTINE": {"field_name": "quarantine", "type": int, "nullable": False},
+            "UTILIZATION": {"field_name": "utilization", "type": int, "nullable": False},
+            "DEFECT": {"field_name": "defect", "type": int, "nullable": False},
+            "EXPIRED": {"field_name": "expired", "type": int, "nullable": False},
+            "LENGTH": {"field_name": "length", "type": int, "nullable": False},
+            "WIDTH": {"field_name": "width", "type": int, "nullable": False},
+            "HEIGHT": {"field_name": "height", "type": int, "nullable": False},
+            "WEIGHT": {"field_name": "weight", "type": Decimal, "nullable": False},
+            "WAREHOUSE": {"field_name": "warehouse", "type": str, "nullable": True},
+            "SELLING_STATUS": {"field_name": "selling_status", "type": str, "nullable": True},
+            "RECOMMENDATIONS": {"field_name": "recommendations", "type": str, "nullable": True},
+            "TURNOVER": {"field_name": "turnover", "type": str, "nullable": False}
+        }
+    }
 }

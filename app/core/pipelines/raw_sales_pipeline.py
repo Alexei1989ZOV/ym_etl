@@ -15,7 +15,7 @@ class RawSalesETLPipeline:
 
     def run(self, report_date: date) -> None:
         # 1. Создаём объект отчёта
-        report = SalesReport(date_from=str(report_date), date_to=str(report_date))
+        report = SalesReport(date_from=report_date.isoformat(), date_to=report_date.isoformat())
 
         # 2. Генерация и получение ссылки на скачивание
         download_url = self.report_pipeline.run(report)
