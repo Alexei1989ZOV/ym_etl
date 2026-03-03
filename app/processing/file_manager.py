@@ -34,7 +34,9 @@ class FileManager:
         """
         target_dir = self.processed_dir / report.report_type / archive_path.stem
         target_dir.mkdir(parents=True, exist_ok=True)
-
+        # Извлекаем дату из имени файла
+        date_str = archive_path.stem.split("_")[-1]
+        date_obj = datetime.strptime(date_str, "%Y-%m-%d").date()
         csv_files: list[Path] = []
 
         with zipfile.ZipFile(archive_path) as zf:
@@ -43,7 +45,7 @@ class FileManager:
             for name in zf.namelist():
                 if name.lower().endswith(".csv"):
                     # Добавляем timestamp к имени файла, чтобы избежать перезаписи
-                    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                    timestamp = date_obj.strftime("%Y-%m-%d")
                     name_timestamp = f"{Path(name).stem}_{timestamp}{Path(name).suffix}"
                     csv_files.append(target_dir / name_timestamp)
 

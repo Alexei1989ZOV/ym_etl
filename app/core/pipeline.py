@@ -3,7 +3,7 @@ from app.api.report_client import ReportAPIClient
 from app.reports.base import BaseReport
 
 class ReportPipeline:
-    def __init__(self, api_client: ReportAPIClient, poll_interval: int = 10, timeout: int = 600):
+    def __init__(self, api_client: ReportAPIClient, poll_interval: int = 20, timeout: int = 1200):
         self.api_client = api_client
         self.poll_interval = poll_interval
         self.timeout = timeout

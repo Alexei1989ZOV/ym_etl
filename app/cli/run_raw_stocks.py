@@ -4,8 +4,8 @@ import logging
 from app.configs.settings import settings
 from app.storage.database import SessionLocal
 from app.core.date_manager import DateManager
-from app.core.orchestrators.raw_sales_orchestrator import RawSalesOrchestrator
-from app.core.pipelines.raw_sales_pipeline import RawSalesETLPipeline
+from app.core.orchestrators.raw_stocks_orchestrator import RawStocksOrchestrator
+from app.core.pipelines.raw_stocks_pipeline import RawStocksETLPipeline
 from app.processing.file_manager import FileManager
 from app.core.pipeline import ReportPipeline
 from app.api.report_client import ReportAPIClient
@@ -18,8 +18,8 @@ def main():
 
     # 2️⃣ Менеджер дат (начало с конкретной даты, по умолчанию до вчера)
     date_manager = DateManager(
-        start_date=date(2026, 2, 23),
-        end_date=date(2026, 2, 25),
+        start_date=date(2026, 2, 1),
+        end_date=date(2026, 2, 2),
     )
 
     # 3️⃣ Файловый менеджер
@@ -41,14 +41,14 @@ def main():
     )
 
     # 6️⃣ ETL пайплайн
-    etl_pipeline = RawSalesETLPipeline(
+    etl_pipeline = RawStocksETLPipeline(
         session=session,
         file_manager=file_manager,
         report_pipeline=report_pipeline,
     )
 
     # 7️⃣ Оркестратор
-    orchestrator = RawSalesOrchestrator(
+    orchestrator = RawStocksOrchestrator(
         etl_pipeline=etl_pipeline,
         start_date=date_manager.start_date,
         end_date=date_manager.end_date
