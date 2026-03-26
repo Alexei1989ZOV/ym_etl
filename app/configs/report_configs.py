@@ -61,5 +61,19 @@ TRANSFORM_CONFIGS = {
             "RECOMMENDATIONS": {"field_name": "recommendations", "type": str, "nullable": True},
             "TURNOVER": {"field_name": "turnover", "type": str, "nullable": False}
         }
+    },
+    "goods_movement": {
+        "columns": {
+            "SHOP_SKU": {"field_name": "shop_sku", "type": str, "nullable": False},
+            "SKU_NAME": {"field_name": "sku_name", "type": str, "nullable": True},
+            "SHIPMENTS_INCOME": {"field_name": "shipments_income", "type": int, "nullable": True},
+            "RETURNS_INCOME": {"field_name": "returns_income", "type": int, "nullable": True},
+            "INVENTORY_SURPLUS": {"field_name": "inventory_surplus", "type": int, "nullable": True},
+            "ORDERS_OUTCOME": {"field_name": "orders_outcome", "type": int, "nullable": True},
+            "WAREHOUSE_WITHDRAWAL": {"field_name": "warehouse_withdrawal", "type": int, "nullable": True},
+            "RECYCLING": {"field_name": "recycling", "type": int, "nullable": True},
+            "INVENTORY_SHORTAGE": {"field_name": "inventory_shortage", "type": int, "nullable": True},
+            "WAREHOUSE_NAME": {"field_name": "warehouse_name", "type": str, "nullable": True}
+        }
     }
 }

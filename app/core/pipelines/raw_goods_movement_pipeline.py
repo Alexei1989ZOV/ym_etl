@@ -1,22 +1,23 @@
-from datetime import date, timedelta
+from datetime import date
 from sqlalchemy.orm import Session
-from app.reports.stocks import StocksReport
+from app.reports.goods_movement import GoodsMovementReport
 from app.core.pipeline import ReportPipeline
 from app.processing.file_manager import FileManager
-from app.raw_transformers.stocks_transformer import StocksCSVTransformer
-from app.storage.repositories.raw_stocks_repository import RawStocksRepository
+from app.raw_transformers.movement_transformer import GoodsMovementCSVTransformer
+from app.storage.repositories.raw_goods_movement_repository import RawGoodsMovementRepository
 
-class RawStocksETLPipeline:
+
+class GoodsMovementETLPipeline:
     def __init__(self, session: Session, file_manager: FileManager, report_pipeline: ReportPipeline, cleanup: bool = True):
         self.session = session
         self.file_manager = file_manager
         self.report_pipeline = report_pipeline
-        self.repository = RawStocksRepository(session)
+        self.repository = RawGoodsMovementRepository(session)
         self.cleanup = cleanup
 
     def run(self, report_date: date) -> None:
         # 1. Создаём объект отчёта
-        report = StocksReport(report_date=report_date.isoformat())
+        report = GoodsMovementReport(date_from=report_date.isoformat(), date_to=report_date.isoformat())
 
         # 2. Генерация и получение ссылки на скачивание
         download_url = self.report_pipeline.run(report)
@@ -30,13 +31,14 @@ class RawStocksETLPipeline:
         # 5. Распаковываем CSV
         csv_files = self.file_manager.extract_archive(report, raw_zip_path)
         all_records = []
+
         for csv_path in csv_files:
-            transformer = StocksCSVTransformer(csv_path)
+            transformer = GoodsMovementCSVTransformer(csv_path)
             records = transformer.transform()
             all_records.extend(records)
 
         if not all_records:
-            print(f"[RAW STOCKS] Нет данных за {report_date - timedelta(days=1)}")  # для лога
+            print(f"[RAW GOODS MOVEMENT] Нет данных за {report_date}")  # для лога
             return
 
         # 6. Удаляем старые данные
@@ -47,7 +49,7 @@ class RawStocksETLPipeline:
         self.repository.bulk_insert(all_records)
 
         # 8. Логируем
-        print(f"[RAW STOCKS] Загружено {len(all_records)} строк за {actual_data_date}")
+        print(f"[GOODS MOVEMENT] Загружено {len(all_records)} строк за {actual_data_date}")
 
         # 9. Очистка
         if self.cleanup:

@@ -9,6 +9,7 @@ from app.core.pipelines.raw_sales_pipeline import RawSalesETLPipeline
 from app.processing.file_manager import FileManager
 from app.core.pipeline import ReportPipeline
 from app.api.report_client import ReportAPIClient
+from app.storage.repositories.raw_sales_repository import RawSalesRepository
 
 logger = logging.getLogger(__name__)
 
@@ -18,8 +19,8 @@ def main():
 
     # 2️⃣ Менеджер дат (начало с конкретной даты, по умолчанию до вчера)
     date_manager = DateManager(
-        start_date=date(2026, 2, 23),
-        end_date=date(2026, 2, 25),
+        start_date=date(2025, 3, 1),
+        #end_date=date(2026, 2, 25),
     )
 
     # 3️⃣ Файловый менеджер
@@ -46,17 +47,22 @@ def main():
         file_manager=file_manager,
         report_pipeline=report_pipeline,
     )
-
+    repository = RawSalesRepository(session)
     # 7️⃣ Оркестратор
     orchestrator = RawSalesOrchestrator(
         etl_pipeline=etl_pipeline,
+        repository=repository,
         start_date=date_manager.start_date,
         end_date=date_manager.end_date
     )
 
     # 8️⃣ Пробегаем по всем датам и запускаем
     for run_date in date_manager.get_dates():
-        orchestrator.run_for_date(run_date)
-
+        try:
+            orchestrator.run_for_date(run_date)
+            logger.info(f"Отчет за {run_date} загружен")
+        except Exception as e:
+            logger.error(f"Ошибка при загрузке отчета за {run_date} : {e}")
+            continue
 if __name__ == "__main__":
     main()

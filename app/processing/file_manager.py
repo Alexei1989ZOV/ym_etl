@@ -2,6 +2,7 @@ from pathlib import Path
 import zipfile
 from datetime import date, datetime
 from app.reports.base import BaseReport
+import shutil
 
 
 class FileManager:
@@ -56,4 +57,14 @@ class FileManager:
             raise ValueError("В архиве не найдено CSV файлов")
 
         return csv_files
+
+    def cleanup_extracted_dir(self, report: BaseReport, archive_path: Path) -> None:
+        """Удаляет всю распакованную директорию с файлами"""
+        target_dir = self.processed_dir / report.report_type / archive_path.stem
+        try:
+            if target_dir.exists():
+                shutil.rmtree(target_dir)
+                print(f"[CLEANUP] Удалена директория: {target_dir}")
+        except Exception as e:
+            print(f"[CLEANUP] Ошибка при удалении {target_dir}: {e}")
 

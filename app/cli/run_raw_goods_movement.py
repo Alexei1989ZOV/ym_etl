@@ -4,12 +4,12 @@ import logging
 from app.configs.settings import settings
 from app.storage.database import SessionLocal
 from app.core.date_manager import DateManager
-from app.core.orchestrators.raw_stocks_orchestrator import RawStocksOrchestrator
-from app.core.pipelines.raw_stocks_pipeline import RawStocksETLPipeline
+from app.core.orchestrators.raw_goods_movement_orchestrator import RawGoodsMovementOrchestrator
+from app.core.pipelines.raw_goods_movement_pipeline import GoodsMovementETLPipeline
 from app.processing.file_manager import FileManager
 from app.core.pipeline import ReportPipeline
 from app.api.report_client import ReportAPIClient
-from app.storage.repositories.raw_stocks_repository import RawStocksRepository
+from app.storage.repositories.raw_goods_movement_repository import RawGoodsMovementRepository
 
 logging.basicConfig(
         level=logging.INFO,
@@ -47,16 +47,16 @@ def main():
     )
 
     # 6️⃣ ETL пайплайн
-    etl_pipeline = RawStocksETLPipeline(
+    etl_pipeline = GoodsMovementETLPipeline(
         session=session,
         file_manager=file_manager,
         report_pipeline=report_pipeline,
     )
 
-    repository = RawStocksRepository(session)
+    repository = RawGoodsMovementRepository(session)
 
     # 7️⃣ Оркестратор
-    orchestrator = RawStocksOrchestrator(
+    orchestrator = RawGoodsMovementOrchestrator(
         etl_pipeline=etl_pipeline,
         repository=repository,
         start_date=date_manager.start_date,
