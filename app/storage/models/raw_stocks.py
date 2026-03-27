@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy import String, Integer, DECIMAL, Date
+from sqlalchemy import String, Integer, BIGINT, DECIMAL, Date
 from .base_model import Base
 from datetime import date
 from decimal import Decimal
@@ -7,6 +7,7 @@ from decimal import Decimal
 
 class RawStocksReport(Base):
     __tablename__ = "raw_stocks"
+    __table_args__ = {"schema": "raw"}
 
 
 
@@ -14,7 +15,7 @@ class RawStocksReport(Base):
     day: Mapped[date] = mapped_column(Date)
     shop_sku: Mapped[str | None] = mapped_column(String)
     article: Mapped[str | None] = mapped_column(String)
-    market_sku: Mapped[int | None] = mapped_column(Integer)
+    market_sku: Mapped[int | None] = mapped_column(BIGINT)
     product_name: Mapped[str | None] = mapped_column(String)
     valid: Mapped[int | None] = mapped_column(Integer)
     reserved: Mapped[int | None] = mapped_column(Integer)

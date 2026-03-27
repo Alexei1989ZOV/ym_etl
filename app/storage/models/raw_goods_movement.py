@@ -7,6 +7,7 @@ from datetime import date
 
 class RawGoodsMovementReport(Base):
     __tablename__ = "raw_goods_movement"
+    __table_args__ = {"schema": "raw"}
 
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
