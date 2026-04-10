@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 from collections import deque
 from threading import Lock
 
+
 class RateLimiter:
     def __init__(self, max_requests: int, period_seconds: int = 3600):
         self.max_requests = max_requests
@@ -12,6 +13,8 @@ class RateLimiter:
 
     def wait_if_needed(self):
         """Ждет, если лимит исчерпан"""
+        wait_seconds = 0  # <-- объявляем переменную ДО блока with!
+
         with self.lock:
             now = datetime.now()
             cutoff = now - timedelta(seconds=self.period)
@@ -28,12 +31,20 @@ class RateLimiter:
                 if wait_seconds > 0:
                     print(f"[RATE LIMIT] Достигнут лимит {self.max_requests} запросов в час. "
                           f"Ожидание {wait_seconds:.0f} секунд...")
-                    time.sleep(wait_seconds)
-
-                    # НЕ очищаем requests!
-                    # Просто после ожидания рекурсивно вызываем себя для повторной проверки
-                    self.wait_if_needed()
+                    # Не добавляем запрос сейчас, выйдем из with и будем ждать
+                else:
+                    # wait_seconds <= 0 — можно делать запрос
+                    self.requests.append(now)
+                    print(f"[RATE LIMIT] Запрос разрешен. Всего за час: {len(self.requests)}")
                     return
+            else:
+                # Лимит не достигнут — можно делать запрос
+                self.requests.append(now)
+                print(f"[RATE LIMIT] Запрос разрешен. Всего за час: {len(self.requests)}")
+                return
 
-            # Добавляем текущий запрос
-            self.requests.append(now)
+        # Если нужно ждать — делаем это вне блокировки
+        if wait_seconds > 0:
+            time.sleep(wait_seconds)
+            # После ожидания рекурсивно проверяем снова
+            self.wait_if_needed()

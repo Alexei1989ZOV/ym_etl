@@ -1,5 +1,5 @@
 import logging
-from datetime import date
+from datetime import date, datetime
 
 from app.core.orchestrators.base import BaseOrchestrator
 from app.core.pipelines.raw_sales_pipeline import RawSalesETLPipeline
@@ -26,16 +26,9 @@ class RawSalesOrchestrator(BaseOrchestrator):
         self.skip_if_exists = skip_if_exists
 
     def run_for_date(self, run_date: date) -> None:
-        # Разбираем дату на компоненты
-        year = run_date.year  # 2026
-        month = f"{run_date.month:02d}"  # "01"
-        day = f"{run_date.day:02d}"  # "16"
-
-        existing_count = self.repository.count_by_period(
-            year=year,
-            month=month,
-            day=day
-        )
+        logger.info(f"[DEBUG] Начало обработки {run_date}, текущее время: {datetime.now()}")
+        run_date_str = run_date.strftime("%d-%m-%Y")
+        existing_count = self.repository.count_by_period(run_date_str)
 
         if existing_count > 0 and self.skip_if_exists:
             logger.info(f"[RAW SALES] Данные за {run_date} уже есть, пропускаем")
@@ -43,12 +36,10 @@ class RawSalesOrchestrator(BaseOrchestrator):
 
         if existing_count > 0 and not self.skip_if_exists:
             logger.warning(f"[RAW SALES] Перезаписываем {existing_count} записей за {run_date}")
-            self.repository.delete_by_period(
-                year=year,
-                month=month,
-                day=day
-            )
+            self.repository.delete_by_period(run_date_str)
 
         logger.info("[RAW SALES] Запуск отчёта за %s (данные за %s)", run_date, run_date)
+        logger.info(f"[DEBUG] Вызов pipeline.run для {run_date}")
         self.pipeline.run(run_date)
+        logger.info(f"[DEBUG] Pipeline.run завершен для {run_date}")
         logger.info("[RAW SALES] Успешно завершён за %s", run_date)

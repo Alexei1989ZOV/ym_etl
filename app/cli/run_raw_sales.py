@@ -11,7 +11,13 @@ from app.core.pipeline import ReportPipeline
 from app.api.report_client import ReportAPIClient
 from app.storage.repositories.raw_sales_repository import RawSalesRepository
 
+
+logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    )
 logger = logging.getLogger(__name__)
+
 
 def main():
     # 1️⃣ Подключение к БД
@@ -19,7 +25,7 @@ def main():
 
     # 2️⃣ Менеджер дат (начало с конкретной даты, по умолчанию до вчера)
     date_manager = DateManager(
-        start_date=date(2025, 2, 26)
+        start_date=date(2026, 4, 1)
         #end_date=date(2026, 2, 25),
     )
 

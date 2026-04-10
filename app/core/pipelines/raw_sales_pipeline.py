@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime
 from sqlalchemy.orm import Session
 from app.reports.sales import SalesReport
 from app.core.pipeline import ReportPipeline
@@ -7,11 +7,12 @@ from app.raw_transformers.sales_transformer import SalesCSVTransformer
 from app.storage.repositories.raw_sales_repository import RawSalesRepository
 
 class RawSalesETLPipeline:
-    def __init__(self, session: Session, file_manager: FileManager, report_pipeline: ReportPipeline):
+    def __init__(self, session: Session, file_manager: FileManager, report_pipeline: ReportPipeline, cleanup: bool = True):
         self.session = session
         self.file_manager = file_manager
         self.report_pipeline = report_pipeline
         self.repository = RawSalesRepository(session)
+        self.cleanup: bool = True
 
     def run(self, report_date: date) -> None:
         # 1. Создаём объект отчёта
@@ -37,13 +38,11 @@ class RawSalesETLPipeline:
                 continue
 
             # Берём период из первой строки
-            first = records[0]
+            actual_date = records[0].day
 
             # 6. Удаляем старые данные
             self.repository.delete_by_period(
-                year=first.year,
-                month=first.month,
-                day=first.day
+                actual_date
             )
 
             # 7. Вставляем новые данные
@@ -51,8 +50,10 @@ class RawSalesETLPipeline:
 
             # 8. Логируем
             count = self.repository.count_by_period(
-                year=first.year,
-                month=first.month,
-                day=first.day
+                actual_date
             )
-            print(f"[RAW SALES] Загружено {count} строк за {first.day}.{first.month}.{first.year}")
+            print(f"[RAW SALES] Загружено {count} строк за {actual_date}")
+
+            # 9. Очистка
+            if self.cleanup:
+                self.file_manager.cleanup_extracted_dir(report, raw_zip_path)

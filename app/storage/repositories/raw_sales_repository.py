@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from typing import Iterable
 from app.storage.models.raw_sales import RawSalesReport
+from datetime import date
 
 
 class RawSalesRepository:
@@ -25,40 +26,24 @@ class RawSalesRepository:
 
     def delete_by_period(
         self,
-        year: int,
-        month: str,
-        day: str | None = None
+        day: str
     ) -> None:
         """
         Удаляет raw данные за период.
         Используется для идемпотентной перезагрузки.
         """
-        query = self.session.query(RawSalesReport).filter(
-            RawSalesReport.year == year,
-            RawSalesReport.month == month
-        )
-
-        if day:
-            query = query.filter(RawSalesReport.day == day)
-
-        query.delete(synchronize_session=False)
+        self.session.query(RawSalesReport).filter(
+            RawSalesReport.day == day
+        ).delete(synchronize_session=False)
         self.session.commit()
 
     def count_by_period(
         self,
-        year: int,
-        month: str,
-        day: str | None = None
+        day: str
     ) -> int:
         """
         Полезно для логов и sanity-check.
         """
-        query = self.session.query(RawSalesReport).filter(
-            RawSalesReport.year == year,
-            RawSalesReport.month == month
-        )
-
-        if day:
-            query = query.filter(RawSalesReport.day == day)
-
-        return query.count()
+        return self.session.query(RawSalesReport).filter(
+            RawSalesReport.day == day
+        ).count()

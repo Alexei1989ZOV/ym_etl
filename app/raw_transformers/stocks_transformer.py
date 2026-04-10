@@ -53,9 +53,22 @@ class StocksCSVTransformer(BaseCSVTransformer):
         except:
             raise ValueError(f"В имени файла не содержится дата: {name}")
 
+    # app/raw_transformers/stocks_transformer.py
 
     @staticmethod
     def _cast(value, target_type):
+        # Очищаем float от .0
+        if isinstance(value, float):
+            if value.is_integer():
+                value = int(value)
+            else:
+                value = str(value).rstrip('0').rstrip('.')
+
         if target_type is Decimal:
-            return Decimal(str(value))
+            cleaned = str(value).strip().replace(',', '.')
+            return Decimal(cleaned)
+
+        if target_type is str:
+            return str(value)
+
         return target_type(value)
