@@ -13,7 +13,8 @@ class ReportPipeline:
         self.limiters = {
             "sales": RateLimiter(max_requests=10),  # 10 в час
             "stocks": RateLimiter(max_requests=100),  # 100 в час
-            "goods_movement": RateLimiter(max_requests=100)  # 100 в час
+            "goods_movement": RateLimiter(max_requests=100),  # 100 в час
+            "prices": RateLimiter(max_requests=100)  # 100 в час ""
         }
 
     def run(self, report: BaseReport) -> str:

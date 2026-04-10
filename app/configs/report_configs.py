@@ -75,5 +75,27 @@ TRANSFORM_CONFIGS = {
             "INVENTORY_SHORTAGE": {"field_name": "inventory_shortage", "type": int, "nullable": True},
             "WAREHOUSE_NAME": {"field_name": "warehouse_name", "type": str, "nullable": True}
         }
+    },
+    "prices": {
+        "columns": {
+            "ERRORS": {"field_name": "errors", "type": str, "nullable": True},
+            "WARNINGS": {"field_name": "warnings", "type": str, "nullable": True},
+            "OFFER_ID": {"field_name": "offer_id", "type": str, "nullable": False},
+            "OFFER_NAME": {"field_name": "offer_name", "type": str, "nullable": True},
+            "BASIC_PRICE": {"field_name": "basic_price", "type": int, "nullable": True},
+            "BASIC_DISCOUNT_BASE": {"field_name": "basic_discount_base", "type": int, "nullable": True},
+            #"CURRENCY": {"field_name": "currency", "type": str, "nullable": True}, В документации есть, а в csv нет
+            "MINIMUM_FOR_BESTSELLER": {"field_name": "minimum_for_bestseller", "type": int, "nullable": True},
+            "COST_PRICE": {"field_name": "cost_price", "type": int, "nullable": True},
+            "ADDITIONAL_EXPENSES": {"field_name": "additional_expenses", "type": int, "nullable": True},
+            "ON_DISPLAY": {"field_name": "on_display", "type": int, "nullable": True},# В документации тут почему-то Str
+            "PRICE_GREEN_THRESHOLD": {"field_name": "price_green_threshold", "type": int, "nullable": True},
+            "PRICE_RED_THRESHOLD": {"field_name": "price_red_threshold", "type": int, "nullable": True},
+            "MINIMUM_PRICE_ON_MARKETPLACES": {"field_name": "minimum_price_on_marketplaces", "type": int, "nullable": True},
+            "MARKETPLACE_WITH_BEST_PRICE_WITHOUT_MARKET": {"field_name": "marketplace_with_best_price", "type": str, "nullable": True},
+            "PRICE_VALUE_OUTSIDE_MARKET": {"field_name": "price_value_outside_market", "type": int, "nullable": True},
+            "SHOP_WITH_BEST_PRICE_ON_MARKET": {"field_name": "shop_with_best_price_on_market", "type": str, "nullable": True},
+            "PRICE_VALUE_ON_MARKET": {"field_name": "price_value_on_market", "type": int, "nullable": True}
+        }
     }
 }
