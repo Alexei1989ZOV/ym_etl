@@ -59,3 +59,29 @@ class ReportAPIClient(BaseAPIClient):
             params=request_data.get("params"),
             json=payload
         )
+
+    def get_offer_mappings(self, report: BaseReport):
+        all_offers = []
+        next_page_token = None
+        params = {"limit": 100}
+
+        while True:
+            if next_page_token:
+                params["pageToken"] = next_page_token
+
+            request_data = report.build_request()
+            response = self.make_request(
+                "POST",
+                report.endpoint,
+                params=params,
+                json=request_data.get("json", {})
+            )
+            result = response.get("result", {})
+            offers_on_page = result.get("offerMappings", [])
+            all_offers.extend(offers_on_page)
+
+            paging = result.get("paging", {})
+            next_page_token = paging.get("nextPageToken")
+            if not next_page_token:
+                break
+        return {"result": {"offerMappings": all_offers}}
