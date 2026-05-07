@@ -48,6 +48,8 @@ class GoodsMovementETLPipeline:
         # 7. Вставляем новые данные
         self.repository.bulk_insert(all_records)
 
+        self.session.commit()
+
         # 8. Логируем
         print(f"[GOODS MOVEMENT] Загружено {len(all_records)} строк за {actual_data_date}")
 

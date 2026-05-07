@@ -1,11 +1,10 @@
-import logging
 from datetime import date
-
 from app.core.orchestrators.base import BaseOrchestrator
 from app.core.pipelines.raw_goods_movement_pipeline import GoodsMovementETLPipeline
 from app.storage.repositories.raw_goods_movement_repository import  RawGoodsMovementRepository
+from app.configs.logger_settings import get_logger
 
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
 
 class RawGoodsMovementOrchestrator(BaseOrchestrator):
     """

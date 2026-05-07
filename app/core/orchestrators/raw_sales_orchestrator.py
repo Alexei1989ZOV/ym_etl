@@ -1,11 +1,10 @@
-import logging
 from datetime import date, datetime
-
 from app.core.orchestrators.base import BaseOrchestrator
 from app.core.pipelines.raw_sales_pipeline import RawSalesETLPipeline
 from app.storage.repositories.raw_sales_repository import RawSalesRepository
+from app.configs.logger_settings import get_logger
 
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
 
 class RawSalesOrchestrator(BaseOrchestrator):
     """
@@ -39,7 +38,7 @@ class RawSalesOrchestrator(BaseOrchestrator):
             self.repository.delete_by_period(run_date_str)
 
         logger.info("[RAW SALES] Запуск отчёта за %s (данные за %s)", run_date, run_date)
-        logger.info(f"[DEBUG] Вызов pipeline.run для {run_date}")
+        logger.debug(f"[RAW SALES] Вызов pipeline.run для {run_date}")
         self.pipeline.run(run_date)
-        logger.info(f"[DEBUG] Pipeline.run завершен для {run_date}")
+        logger.debug(f"[RAW SALES] Pipeline.run завершен для {run_date}")
         logger.info("[RAW SALES] Успешно завершён за %s", run_date)

@@ -1,6 +1,8 @@
 from app.configs.settings import settings
 import requests
+from app.configs.logger_settings import get_logger
 
+logger = get_logger(__name__)
 
 class BaseAPIClient:
     """
@@ -57,10 +59,13 @@ class BaseAPIClient:
             RuntimeError: при ошибке сети или недоступности ресурса
         """
         try:
+            logger.debug(f"Sending {method} to {url}")
             response = self.session.request(method, url, **kwargs)
             response.raise_for_status()
+            logger.debug(f"Response {response.status_code} from {url}")
             return response
         except requests.exceptions.RequestException as e:
+            logger.error(f"Network error: {method} {url} - {e}")
             raise RuntimeError(f"Ошибка сети: {e}") from e
 
     @staticmethod
@@ -111,7 +116,13 @@ class BaseAPIClient:
             RuntimeError: при сетевой ошибке или ошибке API
         """
         url = self._build_url(endpoint)
-        response = self._send(method, url, **kwargs)
-        data = self._parse_json(response)
-        self._check_api_errors(data)
-        return data
+        try:
+            logger.debug(f"API request: {method} {endpoint}")
+            response = self._send(method, url, **kwargs)
+            data = self._parse_json(response)
+            self._check_api_errors(data)
+            logger.debug(f"API response: {method} {endpoint} - status {response.status_code}")
+            return data
+        except Exception as e:
+            logger.error(f"API request failed: {method} {endpoint} - {e}", exc_info=True)
+            raise

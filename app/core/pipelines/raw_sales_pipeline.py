@@ -48,6 +48,8 @@ class RawSalesETLPipeline:
             # 7. Вставляем новые данные
             self.repository.bulk_insert(records)
 
+            self.session.commit()
+
             # 8. Логируем
             count = self.repository.count_by_period(
                 actual_date

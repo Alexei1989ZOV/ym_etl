@@ -1,12 +1,11 @@
 from abc import ABC, abstractmethod
 from datetime import date
 from typing import Iterable
-import logging
-
+from app.configs.logger_settings import get_logger
 from app.core.date_manager import DateManager
 
 
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
 
 
 class BaseOrchestrator(ABC):
@@ -39,8 +38,10 @@ class BaseOrchestrator(ABC):
         )
 
         for run_date in dates:
+            logger.debug(f"[ORCHESTRATOR] Обработка даты {run_date}")
             try:
                 self.run_for_date(run_date)
+                logger.debug(f"[ORCHESTRATOR] Дата {run_date} успешно обработана")
             except Exception:
                 logger.exception(
                     "[ORCHESTRATOR] Ошибка при обработке даты %s",
@@ -52,5 +53,7 @@ class BaseOrchestrator(ABC):
     def run_for_date(self, run_date: date) -> None:
         """
         Запуск пайплайна для одной даты.
+        Args:
+            run_date: Дата, за которую нужно загрузить данные
         """
         raise NotImplementedError

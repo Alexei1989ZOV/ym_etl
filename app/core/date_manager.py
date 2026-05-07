@@ -3,16 +3,18 @@ from typing import Optional, List
 
 
 class DateManager:
-    """
-    :param start_date: дата, с которой начинать загрузку
-    :param end_date: дата, до которой грузить (включительно), по умолчанию вчера
-    """
+    """Управляет диапазонами дат для загрузки отчетов."""
 
     def __init__(
         self,
         start_date: Optional[date] = None,
         end_date: Optional[date] = None,
     ):
+        """
+        Args:
+            start_date: Начальная дата загрузки (включительно)
+            end_date: Конечная дата загрузки (включительно), по умолчанию вчера
+        """
         self.start_date = start_date
         self.end_date = end_date or (date.today() - timedelta(days=1))
 

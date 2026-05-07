@@ -2,10 +2,17 @@ import time
 from datetime import datetime, timedelta
 from collections import deque
 from threading import Lock
+from app.configs.logger_settings import get_logger
 
+logger = get_logger(__name__)
 
 class RateLimiter:
     def __init__(self, max_requests: int, period_seconds: int = 3600):
+        """
+        Args:
+            max_requests (int): максимально разрешенное количество запросов за временной период
+            period_seconds (int): временной период в секундах
+        """
         self.max_requests = max_requests
         self.period = period_seconds
         self.requests = deque()
@@ -13,7 +20,7 @@ class RateLimiter:
 
     def wait_if_needed(self):
         """Ждет, если лимит исчерпан"""
-        wait_seconds = 0  # <-- объявляем переменную ДО блока with!
+        wait_seconds = 0
 
         with self.lock:
             now = datetime.now()
@@ -29,18 +36,18 @@ class RateLimiter:
                 wait_seconds = (oldest + timedelta(seconds=self.period) - now).total_seconds()
 
                 if wait_seconds > 0:
-                    print(f"[RATE LIMIT] Достигнут лимит {self.max_requests} запросов в час. "
-                          f"Ожидание {wait_seconds:.0f} секунд...")
+                    logger.info(f"[RATE LIMIT] Достигнут лимит {self.max_requests} запросов в час. "
+                                f"Ожидание {wait_seconds:.0f} секунд")
                     # Не добавляем запрос сейчас, выйдем из with и будем ждать
                 else:
                     # wait_seconds <= 0 — можно делать запрос
                     self.requests.append(now)
-                    print(f"[RATE LIMIT] Запрос разрешен. Всего за час: {len(self.requests)}")
+                    logger.debug(f"[RATE LIMIT] Запрос разрешен. Всего за час: {len(self.requests)}")
                     return
             else:
                 # Лимит не достигнут — можно делать запрос
                 self.requests.append(now)
-                print(f"[RATE LIMIT] Запрос разрешен. Всего за час: {len(self.requests)}")
+                logger.debug(f"[RATE LIMIT] Запрос разрешен. Всего за час: {len(self.requests)}")
                 return
 
         # Если нужно ждать — делаем это вне блокировки

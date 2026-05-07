@@ -2,16 +2,34 @@ from app.reports.base import BaseReport
 from typing import Any
 
 class SalesReport(BaseReport):
+    """
+    Класс для отчета Аналитика продаж.
+    Атрибуты хранят эндпоинт, тип отчета, требуются ли business_id и/или campaign_id
+    согласно документации.
+    """
     endpoint = "reports/shows-sales/generate"
     report_type = "sales"
     requires_business_id = True
     requires_campaign_id = False
 
     def __init__(self, date_from: str, date_to: str):
+        """
+        Args:
+            date_from(str): Дата начала периода за который хотим получить отчет
+            date_to(str): Дата конца периода за который хотим получить отчет
+        """
         self.date_from = date_from
         self.date_to = date_to
 
     def build_request(self, format_: str = "CSV", grouping: str = "OFFERS") -> dict[str, Any]:
+        """
+        Формирует данные для HTTP-запроса генерации отчета:
+        Args:
+            format_: Формат отчета (CSV, JSON, FILE). Default: CSV
+            grouping: Группировка отчета (OFFERS - по товарам, CATEGORIES - по категориям). Default: OFFERS
+        Returns:
+            dict: Параметры запроса в формате {"params": {...}, "json": {...}}
+        """
         return {
             "params": {"format": format_},
             "json": {

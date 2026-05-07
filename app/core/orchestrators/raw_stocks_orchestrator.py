@@ -1,11 +1,10 @@
-import logging
 from datetime import date, timedelta
-
 from app.core.orchestrators.base import BaseOrchestrator
 from app.core.pipelines.raw_stocks_pipeline import RawStocksETLPipeline
 from app.storage.repositories.raw_stocks_repository import RawStocksRepository
+from app.configs.logger_settings import get_logger
 
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
 
 class RawStocksOrchestrator(BaseOrchestrator):
     """

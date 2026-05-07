@@ -1,10 +1,9 @@
-import logging
 from datetime import date
-
 from app.core.orchestrators.base import BaseOrchestrator
 from app.core.pipelines.dim_offers_pipeline import OffersETLPipeline
+from app.configs.logger_settings import get_logger
 
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
 
 
 class OffersOrchestrator(BaseOrchestrator):
@@ -25,6 +24,6 @@ class OffersOrchestrator(BaseOrchestrator):
         """
         Запуск загрузки справочника товаров.
         """
-        logger.info("[DIM OFFERS] Запуск загрузки справочника товаров")
+        logger.info(f"[DIM OFFERS] Запуск загрузки справочника товаров за {run_date}")
         self.pipeline.run(run_date)
-        logger.info("[DIM OFFERS] Успешно завершён")
+        logger.info(f"[DIM OFFERS] Успешно завершён за {run_date}")
