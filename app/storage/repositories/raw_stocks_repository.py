@@ -77,3 +77,5 @@ class RawStocksRepository:
             ).count()
         except Exception as e:
             raise IOError(f"Ошибка при получении количества записей в таблице raw_stocks за {target_date}: {e}")
+
+        #SOME CODE HERE
