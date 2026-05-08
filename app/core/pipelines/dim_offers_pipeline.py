@@ -21,38 +21,45 @@ class OffersETLPipeline:
         """
         self.session = session
         self.api_client = api_client
-        self.raw_repo = RawOffersRepository(session)  # ← для сырых данных
-        self.dim_repo = DimOffersRepository(session)  # ← для чистых
+        self.raw_repo = RawOffersRepository(session)
+        self.dim_repo = DimOffersRepository(session)
 
     def run(self, report_date: date) -> None:
         """
-        Загружает справочник товаров из API и сохраняет в БД.
+        Загружает справочник товаров из API Яндекс.Маркета и сохраняет в БД.
         Процесс:
-            1. Получает данные из API Яндекс.Маркета
-            2. Сохраняет сырой JSON в raw_offers
-            3. Трансформирует JSON в модели dim_offers
-            4. Сохраняет (обновляет) данные в dim_offers
+            1. Получает данные из API (offer mappings)
+            2. Сохраняет сырой JSON в таблицу raw_offers (для истории/отладки)
+            3. Трансформирует JSON в модели DimOffersReport
+            4. Сохраняет (обновляет) данные в таблицу dim_offers (справочник товаров)
         Args:
             report_date: Дата запуска (используется для логирования)
+        Note:
+            Справочник обновляется полностью (upsert по offer_id).
+            Данные загружаются синхронно через API (пагинация).
         """
-        logger.info(f"[OFFERS] Начало загрузки справочника товаров")
-        # 1. Получаем данные из API
-        report = DimOffersReport()
-        data = self.api_client.get_offer_mappings(report)
+        logger.info("[OFFERS] Начало загрузки справочника товаров")
 
-        # 2. Сохраняем сырой ответ (для истории/отладки)
-        self.raw_repo.insert(data)
-        logger.info(f"[RAW OFFERS] Сохранен сырой ответ API")
+        try:
+            report = DimOffersReport()
+            data = self.api_client.get_offer_mappings(report)
 
-        # 3. Трансформируем и сохраняем в витрину
-        transformer = OffersJSONTransformer(data)
-        records = transformer.transform()
-        logger.debug(f"[RAW OFFERS] Трансформация завершена, получено {len(records)} записей")
+            self.raw_repo.insert(data)
+            logger.info("[RAW OFFERS] Сохранен сырой ответ API")
 
-        if not records:
-            logger.warning("[OFFERS] Нет данных для загрузки")
-            return
+            transformer = OffersJSONTransformer(data)
+            records = transformer.transform()
+            logger.debug("[RAW OFFERS] Трансформация завершена, получено {len(records)} записей")
 
-        self.dim_repo.upsert(records)
-        self.session.commit()
-        logger.info(f"[DIM OFFERS] Загружено/обновлено {len(records)} товаров")
+            if not records:
+                logger.warning("[OFFERS] Нет данных для загрузки")
+                return
+
+            self.dim_repo.upsert(records)
+            self.session.commit()
+            logger.info(f"[DIM OFFERS] Загружено/обновлено {len(records)} товаров")
+
+        except Exception as e:
+            self.session.rollback()
+            logger.error(f"[OFFERS] Ошибка при загрузке: {e}")
+            raise

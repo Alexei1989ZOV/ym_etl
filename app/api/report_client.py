@@ -81,7 +81,7 @@ class ReportAPIClient(BaseAPIClient):
         )
 
     def get_offer_mappings(self, report: BaseReport):
-        logger.info("Загрузка справочника товаров (offer mappings)")
+        logger.debug("Загрузка справочника товаров (offer mappings)")
         all_offers = []
         next_page_token = None
         params = {"limit": 100}

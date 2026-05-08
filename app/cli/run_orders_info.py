@@ -34,13 +34,12 @@ def main():
             campaign_id=settings.campaign_id,
         )
 
-        # 3. Pipeline для отчётов
-        report_pipeline = ReportPipeline(api_client=api_client)
+
 
         # 4. ETL пайплайн
         etl_pipeline = OrdersInfoPipeline(
             session=session,
-            report_pipeline=report_pipeline,
+            api_client=api_client,
         )
 
         # 5. Запуск
