@@ -1,23 +1,24 @@
 from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy import String, Integer, Date, Float, JSON
+from sqlalchemy import String, Integer, Date, Float, JSON, DECIMAL
 from .base_model import Base
 from datetime import date
 from datetime import datetime
 from sqlalchemy import UniqueConstraint
+from decimal import Decimal
 
 
 class DimOffersReport(Base):
     __tablename__ = "dim_offers"
-    __table_args__ = {"schema": "orders_info"}
+    __table_args__ = {"schema": "catalog_mp"}
 
-    offer_id: Mapped[str] = mapped_column(String, primary_key=True)
+    offer_id: Mapped[int] = mapped_column(Integer, primary_key=True)
     offer_name: Mapped[str] = mapped_column(String, nullable=False)
     market_category_id: Mapped[int] = mapped_column(Integer, nullable=True)
-    length: Mapped[float] = mapped_column(Float, nullable=True)
-    width: Mapped[float] = mapped_column(Float, nullable=True)
-    height: Mapped[float] = mapped_column(Float, nullable=True)
-    weight: Mapped[float] = mapped_column(Float, nullable=True)
-    load_date: Mapped[date] = mapped_column(Date, nullable=False, default=date.today())
+    length: Mapped[Decimal] = mapped_column(DECIMAL(9, 2), nullable=True)
+    width: Mapped[Decimal] = mapped_column(DECIMAL(9, 2), nullable=True)
+    height: Mapped[Decimal] = mapped_column(DECIMAL(9, 2), nullable=True)
+    weight: Mapped[Decimal] = mapped_column(DECIMAL(9, 2), nullable=True)
+    report_date: Mapped[date] = mapped_column(Date, nullable=False, default=date.today())
 
 
 class RawDimOffersReport(Base):

@@ -59,7 +59,7 @@ class OffersJSONTransformer(BaseJSONtransformer):
                 width = weight_dimensions.get("width"),
                 height = weight_dimensions.get("height"),
                 weight = weight_dimensions.get("weight"),
-                load_date = date_today
+                report_date = date_today
             )
             records_to_insert.append(to_result)
         logger.info(f"Трансформация ответа API информации о товарах завершена. Товаров: {len(records_to_insert)}")

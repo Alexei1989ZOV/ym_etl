@@ -42,7 +42,7 @@ class DimOffersRepository:
                 'width': r.width,
                 'height': r.height,
                 'weight': r.weight,
-                'load_date': r.load_date,
+                'report_date': r.report_date,
             })
 
         try:
@@ -56,7 +56,7 @@ class DimOffersRepository:
                     'width': stmt.excluded.width,
                     'height': stmt.excluded.height,
                     'weight': stmt.excluded.weight,
-                    'load_date': stmt.excluded.load_date,
+                    'report_date': stmt.excluded.report_date,
                 }
             )
             self.session.execute(stmt)
