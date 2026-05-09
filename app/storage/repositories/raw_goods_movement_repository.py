@@ -53,7 +53,7 @@ class RawGoodsMovementRepository:
         try:
             logger.debug(f"Удаляем данные за {target_date} из таблицы raw_goods_movement.")
             self.session.query(RawGoodsMovementReport).filter(
-                RawGoodsMovementReport.day == target_date
+                RawGoodsMovementReport.report_date == target_date
             ).delete(synchronize_session=False)
             logger.debug(
             f"Данные за {target_date} удалены из таблицы raw_goods_movement. Количество записей: {self.count_by_date(target_date)}")
@@ -73,7 +73,7 @@ class RawGoodsMovementRepository:
         """
         try:
             return self.session.query(RawGoodsMovementReport).filter(
-                RawGoodsMovementReport.day == target_date
+                RawGoodsMovementReport.report_date == target_date
             ).count()
         except Exception as e:
             raise IOError(f"Ошибка при получении количества записей в таблице raw_goods_movement за {target_date}: {e}")

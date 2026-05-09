@@ -64,7 +64,7 @@ TRANSFORM_CONFIGS = {
     },
     "goods_movement": {
         "columns": {
-            "SHOP_SKU": {"field_name": "shop_sku", "type": str, "nullable": False},
+            "SHOP_SKU": {"field_name": "shop_sku", "type": int, "nullable": False},
             "SKU_NAME": {"field_name": "sku_name", "type": str, "nullable": True},
             "SHIPMENTS_INCOME": {"field_name": "shipments_income", "type": int, "nullable": True},
             "RETURNS_INCOME": {"field_name": "returns_income", "type": int, "nullable": True},
