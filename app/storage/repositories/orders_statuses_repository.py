@@ -16,7 +16,7 @@ class OrdersStatusesRepository:
     Логика:
         - Если у заказа нет активного статуса → создаем новую запись (is_current = True)
         - Если статус изменился (текст статуса другой) → закрываем старый (is_current = False,
-          заполняем status_to) и вставляем новую запись с новым статусом (is_current = True)
+          заполняем date_to) и вставляем новую запись с новым статусом (is_current = True)
         - Если статус не изменился → ничего не делаем
         - При любом изменении статуса обновляем поле status_upd_date в таблице orders
     """
@@ -78,15 +78,15 @@ class OrdersStatusesRepository:
 
             # 1. Закрываем старые статусы и обновляем orders
             for current, new in to_update:
-                current.status_to = new.status_from
+                current.date_to = new.date_from
                 current.is_current = False
-                current.load_date = date.today()
+                current.report_date = date.today()
                 self.session.add(current)
 
                 # Обновляем дату статуса в основной таблице заказов
                 self.session.query(OrdersTbl).filter(
                     OrdersTbl.order_id == current.order_id
-                ).update({"status_upd_date": new.status_from})
+                ).update({"status_upd_date": new.date_from})
                 logger.debug(f"Заказ {current.order_id}: закрыт старый статус")
 
             # 2. Вставляем новые статусы (bulk + защита от дубликатов)
@@ -94,15 +94,15 @@ class OrdersStatusesRepository:
                 data = [{
                     'order_id': r.order_id,
                     'order_status': r.order_status,
-                    'status_from': r.status_from,
-                    'status_to': None,
+                    'date_from': r.date_from,
+                    'date_to': None,
                     'is_current': True,
-                    'load_date': date.today(),
+                    'report_date': date.today(),
                 } for r in to_insert]
 
                 stmt = insert(OrdersStatusesTbl).values(data)
                 stmt = stmt.on_conflict_do_nothing(
-                    index_elements=['order_id', 'status_from']
+                    index_elements=['order_id', 'date_from']
                 )
                 self.session.execute(stmt)
                 logger.debug(f"Вставлено {len(data)} новых статусов")

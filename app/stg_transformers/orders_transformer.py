@@ -1,4 +1,5 @@
 from datetime import date, datetime
+from decimal import Decimal
 from .stg_base import BaseJSONtransformer
 from app.storage.models.orders_info import OrdersTbl, OrdersStatusesTbl, OrdersCommissionsTbl, OrderItemsTbl, OrderPaymentsTbl, OrdersSubsidiesTbl
 from app.configs.logger_settings import get_logger
@@ -70,7 +71,7 @@ class OrdersTransformer(BaseJSONtransformer):
                 creation_date = datetime.fromisoformat(order["creationDate"]).date() if order.get("creationDate") else None,
                 status_upd_date = datetime.fromisoformat(order["statusUpdateDate"]) if order.get("statusUpdateDate") else None,
                 payment_type = str(order["paymentType"]) if order.get("paymentType") else None,
-                load_date = date.today()
+                report_date = date.today()
             )
             return record
         except KeyError as e:
@@ -91,10 +92,10 @@ class OrdersTransformer(BaseJSONtransformer):
             record = OrdersStatusesTbl(
                 order_id = order_id,
                 order_status = str(order["status"]) if order.get("status") else None,
-                status_from = datetime.fromisoformat(order["statusUpdateDate"]) if order.get("statusUpdateDate") else None,
-                status_to = None,
+                date_from = datetime.fromisoformat(order["statusUpdateDate"]) if order.get("statusUpdateDate") else None,
+                date_to = None,
                 is_current = True,
-                load_date = date.today()
+                report_date = date.today()
                 )
             return record
         except KeyError as e:
@@ -116,8 +117,8 @@ class OrdersTransformer(BaseJSONtransformer):
                 record = OrdersCommissionsTbl(
                     order_id = order_id,
                     commission_type = str(commission["type"]) if commission.get("type") else None,
-                    commission_amount = float(commission.get("actual", 0)),
-                    load_date = date.today()
+                    commission_amount = Decimal(str(commission.get("actual", 0))),
+                    report_date = date.today()
                     )
                 records.append(record)
             except KeyError as e:
@@ -137,7 +138,7 @@ class OrdersTransformer(BaseJSONtransformer):
         items = order.get("items", [])
         for item in items:
             try:
-                shop_sku = str(item["shopSku"]) if item.get("shopSku") else None
+                shop_sku = int(item["shopSku"]) if item.get("shopSku") else None
                 ordered_qt = int(item.get("count", 0))
                 returned_qt = 0
                 rejected_qt = 0
@@ -151,17 +152,17 @@ class OrdersTransformer(BaseJSONtransformer):
                 else:
                     delivery_qt = 0
                 prices = item.get("prices", [])
-                seller_price_per_unit = 0
-                mp_discount_per_unit = 0
-                mp_yandex_plus_discount = 0
-                buyer_price_per_unit = 0
+                seller_price_per_unit = Decimal(0)
+                mp_discount_per_unit = Decimal(0)
+                mp_yandex_plus_discount = Decimal(0)
+                buyer_price_per_unit = Decimal(0)
                 for price in prices:
                     if price["type"] == "MARKETPLACE":
-                        mp_discount_per_unit = price.get("costPerItem", 0)
+                        mp_discount_per_unit = Decimal(str(price.get("costPerItem", 0)))
                     elif price["type"] == "CASHBACK":
-                        mp_yandex_plus_discount = price.get("costPerItem", 0)
+                        mp_yandex_plus_discount = Decimal(str(price.get("costPerItem", 0)))
                     elif price["type"] == "BUYER":
-                        buyer_price_per_unit = price.get("costPerItem", 0)
+                        buyer_price_per_unit = Decimal(str(price.get("costPerItem", 0)))
                 seller_price_per_unit = buyer_price_per_unit
                 if mp_discount_per_unit:
                     seller_price_per_unit += mp_discount_per_unit
@@ -183,7 +184,7 @@ class OrdersTransformer(BaseJSONtransformer):
                     mp_yandex_plus_discount = mp_yandex_plus_discount,
                     bid_fee = bid_fee,
                     warehouse_id = warehouse_id,
-                    load_date = date.today()
+                    report_date = date.today()
                 )
                 records.append(record)
             except KeyError as e:
@@ -207,12 +208,12 @@ class OrdersTransformer(BaseJSONtransformer):
                 payment_order_date = None
                 payment_order = payment.get("paymentOrder", {})
                 if payment_order:
-                    payment_order_id = str(payment_order["id"]) if payment_order.get("id") else None
+                    payment_order_id = int(payment_order["id"]) if payment_order.get("id") else None
                     payment_order_date = datetime.fromisoformat(payment_order["date"]).date() if payment_order.get("date") else None
                 payment_id = payment.get("id")
                 payment_type = payment.get("type")
                 payment_source = payment.get("source")
-                payment_amount = float(payment["total"]) if "total" in payment else None
+                payment_amount = Decimal(str(payment["total"])) if "total" in payment else None
                 payment_date = payment.get("date")
 
                 if not payment_id:
@@ -230,7 +231,7 @@ class OrdersTransformer(BaseJSONtransformer):
                     payment_amount = payment_amount,
                     payment_order_id = payment_order_id,
                     payment_order_date = payment_order_date,
-                    load_date = date.today()
+                    report_date = date.today()
                 )
                 records.append(record)
             except KeyError as e:
@@ -252,13 +253,13 @@ class OrdersTransformer(BaseJSONtransformer):
             try:
                 operation_type = subsidy.get("operationType")
                 subsidy_type = subsidy.get("type")
-                subsidy_amount = float(subsidy.get("amount")) if "amount" in subsidy else None
+                subsidy_amount = Decimal(str(subsidy.get("amount"))) if "amount" in subsidy else None
                 record = OrdersSubsidiesTbl(
                     order_id = order_id,
                     operation_type = operation_type,
                     subsidy_type = subsidy_type,
                     subsidy_amount = subsidy_amount,
-                    load_date=date.today()
+                    report_date=date.today()
                 )
                 records.append(record)
             except KeyError as e:

@@ -43,7 +43,7 @@ class OrdersPaymentsRepository:
                     'payment_amount': r.payment_amount,
                     'payment_order_id': r.payment_order_id,
                     'payment_order_date': r.payment_order_date,
-                    'load_date': r.load_date
+                    'report_date': r.report_date
                 })
 
             stmt = insert(OrderPaymentsTbl).values(values_list)
@@ -55,7 +55,7 @@ class OrdersPaymentsRepository:
                     'payment_date': stmt.excluded.payment_date,
                     'payment_order_id': stmt.excluded.payment_order_id,
                     'payment_order_date': stmt.excluded.payment_order_date,
-                    'load_date': stmt.excluded.load_date
+                    'report_date': stmt.excluded.report_date
                 }
             )
             self.session.execute(stmt)

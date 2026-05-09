@@ -26,7 +26,7 @@ class OrdersCommissionsRepository:
         Args:
             records: Список объектов OrdersCommissionsTbl.
         Raises:
-            IOError при ошибке сохранения данных.
+            IOError: при ошибке сохранения данных.
         """
         if not records:
             logger.warning("Нет данных для сохранения в таблицу orders_commissions.")
@@ -39,14 +39,14 @@ class OrdersCommissionsRepository:
                     'order_id': r.order_id,
                     'commission_type': r.commission_type,
                     'commission_amount': r.commission_amount,
-                    'load_date': r.load_date
+                    'report_date': r.report_date
                 })
             stmt = insert(OrdersCommissionsTbl).values(values_list)
             stmt = stmt.on_conflict_do_update(
                 index_elements=['order_id', 'commission_type'],
                 set_={
                     'commission_amount': stmt.excluded.commission_amount,
-                    'load_date': stmt.excluded.load_date
+                    'report_date': stmt.excluded.report_date
                 }
             )
             self.session.execute(stmt)

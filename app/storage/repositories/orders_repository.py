@@ -38,7 +38,7 @@ class OrdersRepository:
                     'creation_date': r.creation_date,
                     'status_upd_date': r.status_upd_date,
                     'payment_type': r.payment_type,
-                    'load_date': r.load_date
+                    'report_date': r.report_date
                 })
 
             # 2. Формируем запрос
@@ -49,7 +49,7 @@ class OrdersRepository:
                 set_={
                     'status_upd_date': stmt.excluded.status_upd_date,
                     'payment_type': stmt.excluded.payment_type,
-                    'load_date': stmt.excluded.load_date,
+                    'report_date': stmt.excluded.report_date,
                 }
             )
             self.session.execute(stmt)
