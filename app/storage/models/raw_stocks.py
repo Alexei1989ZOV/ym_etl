@@ -12,8 +12,8 @@ class RawStocksReport(Base):
 
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    day: Mapped[date] = mapped_column(Date)
-    shop_sku: Mapped[str | None] = mapped_column(String)
+    report_date: Mapped[date] = mapped_column(Date)
+    shop_sku: Mapped[int | None] = mapped_column(Integer)
     article: Mapped[str | None] = mapped_column(String)
     market_sku: Mapped[int | None] = mapped_column(BIGINT)
     product_name: Mapped[str | None] = mapped_column(String)
@@ -28,7 +28,7 @@ class RawStocksReport(Base):
     width: Mapped[int | None] = mapped_column(Integer)
     height: Mapped[int | None] = mapped_column(Integer)
     weight: Mapped[Decimal | None] = mapped_column(DECIMAL(10, 4))
-    warehouse: Mapped[str | None] = mapped_column(String)
+    warehouse_name: Mapped[str | None] = mapped_column(String)
     selling_status: Mapped[str | None] = mapped_column(String)
     recommendations: Mapped[str | None] = mapped_column(String)
     turnover: Mapped[str | None] = mapped_column(String)

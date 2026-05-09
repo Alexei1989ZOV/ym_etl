@@ -29,5 +29,5 @@ class RawDimOffersReport(Base):
     )
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    loaded_at: Mapped[date] = mapped_column(Date, default=date.today())
+    report_date: Mapped[date] = mapped_column(Date, default=date.today())
     data: Mapped[dict] = mapped_column(JSON)

@@ -13,14 +13,14 @@ class RawSalesReport(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
 
-    day: Mapped[str] = mapped_column(String, nullable=False)
+    report_date: Mapped[date] = mapped_column(Date, nullable=False)
     month: Mapped[str] = mapped_column(String, nullable=False)
     year: Mapped[int] = mapped_column(Integer, nullable=False)
 
     category_name: Mapped[str | None] = mapped_column(String)
     brand_name: Mapped[str | None] = mapped_column(String)
 
-    offer_id: Mapped[str | None] = mapped_column(String)
+    offer_id: Mapped[int | None] = mapped_column(Integer)
     offer_name: Mapped[str | None] = mapped_column(String)
 
     visibility_index: Mapped[str | None] = mapped_column(String)

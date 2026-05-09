@@ -11,8 +11,8 @@ class RawGoodsMovementReport(Base):
 
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    day: Mapped[date] = mapped_column(Date)
-    shop_sku: Mapped[str] = mapped_column(String)
+    report_date: Mapped[date] = mapped_column(Date)
+    shop_sku: Mapped[int] = mapped_column(Integer)
     sku_name: Mapped[str | None] = mapped_column(String)
     shipments_income: Mapped[int | None] = mapped_column(Integer)
     returns_income: Mapped[int | None] = mapped_column(Integer)
