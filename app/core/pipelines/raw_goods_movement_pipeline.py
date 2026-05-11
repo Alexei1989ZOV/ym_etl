@@ -42,7 +42,7 @@ class GoodsMovementETLPipeline:
             return
 
         # 6. Удаляем старые данные
-        actual_data_date = all_records[0].day  # <-- берем из первой записи
+        actual_data_date = all_records[0].report_date  # <-- берем из первой записи
         self.repository.delete_by_date(actual_data_date)
 
         # 7. Вставляем новые данные

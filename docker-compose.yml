@@ -8,7 +8,7 @@ services:
       POSTGRES_PASSWORD: Xby6d4g3
       POSTGRES_DB: learning
     ports:
-      - "5433:5432"
+      - "5432:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
     restart: unless-stopped

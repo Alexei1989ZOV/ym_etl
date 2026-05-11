@@ -60,7 +60,7 @@ class OrderItemsTbl(Base):
 
 
 class OrderPaymentsTbl(Base):
-    __tablename__ = "orders"
+    __tablename__ = "orders_payments"
     __table_args__ = (
         Index('ix_payments_order_id', 'order_id'),
         {"schema": "orders"}

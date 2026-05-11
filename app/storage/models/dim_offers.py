@@ -24,7 +24,7 @@ class DimOffersReport(Base):
 class RawDimOffersReport(Base):
     __tablename__ = "raw_offers"
     __table_args__ = (
-        UniqueConstraint('loaded_at', name='uq_raw_offers_loaded_at'),
+        UniqueConstraint('report_date', name='uq_raw_offers_report_date'),
         {"schema": "raw"}
     )
 

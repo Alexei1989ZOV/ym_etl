@@ -24,7 +24,7 @@ def main():
 
     # 2️⃣ Менеджер дат (начало с конкретной даты, по умолчанию до вчера)
     date_manager = DateManager(
-        start_date=date(2026, 4, 1)
+        start_date=date(2026, 5, 5)
         #end_date=date(2025, 2, 2),
     )
 

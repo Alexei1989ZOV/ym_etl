@@ -22,7 +22,7 @@ class RawOffersRepository:
     def insert(self, data: dict) -> None:
         """
         Сохраняет/обновляет данные в таблицу raw_offers
-        по первичному ключу 'loaded_at'.
+        по первичному ключу 'report_date'.
         Если запись существует — полностью обновляет данные за дату.
         Args:
             data: JSON ответ API.
@@ -35,12 +35,12 @@ class RawOffersRepository:
         try:
             logger.debug("Сохраняем данные в таблицу raw_offers")
             stmt = insert(RawDimOffersReport).values(
-                loaded_at=date.today(),
+                report_date=date.today(),
                 data=data
             )
             # Если запись за сегодня уже есть — обновляем data
             stmt = stmt.on_conflict_do_update(
-                constraint='uq_raw_offers_loaded_at',  # имя уникального ограничения
+                constraint='uq_raw_offers_report_date',  # имя уникального ограничения
                 set_={'data': data}
             )
             self.session.execute(stmt)
