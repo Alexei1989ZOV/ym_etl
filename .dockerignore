@@ -1,0 +1,38 @@
+# Git
+.git
+.gitignore
+
+# Python-кэш и временные файлы
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.tox/
+.coverage
+htmlcov/
+
+# Виртуальные окружения (локальные)
+venv/
+.venv/
+env/
+
+# Локальные секреты и переменные окружения
+.env
+
+# Настройки IDE
+.idea/
+.vscode/
+
+# Сборка и дистрибутивы
+dist/
+build/
+*.egg-info/
+
+# Docker-файлы (чтобы не копировать сам Dockerfile внутрь образа)
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Проект
+data/
+logs/
