@@ -16,5 +16,3 @@ RUN pip install --no-cache-dir -r requirements.txt
 # 6. Копируем весь остальной код проекта
 COPY . .
 
-# 7. Команда для запуска приложения
-CMD ["python", "-m", "app.cli.run_orders_info"]

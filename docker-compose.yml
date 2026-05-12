@@ -6,12 +6,32 @@ services:
     environment:
       POSTGRES_USER: alex
       POSTGRES_PASSWORD: Xby6d4g3
-      POSTGRES_DB: learning
+      POSTGRES_DB: ymdb
     ports:
       - "5432:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
     restart: unless-stopped
+    networks:
+      - etl_network
 
+  etl:
+    image: ym_etl:latest
+    container_name: ym_etl
+    tty: true                           
+    stdin_open: true 
+    environment:
+      DB_DSN: postgresql://alex:Xby6d4g3@postgres:5432/ymdb
+      YANDEX_API_KEY: ${YANDEX_API_KEY}
+      YANDEX_BUSINESS_ID: ${YANDEX_BUSINESS_ID}
+      YANDEX_CAMPAIGN_ID: ${YANDEX_CAMPAIGN_ID}
+      LOG_LEVEL: INFO
+    depends_on:
+      - postgres
+    networks:
+      - etl_network
+networks:
+  etl_network:
+    driver: bridge
 volumes:
   postgres-data:
