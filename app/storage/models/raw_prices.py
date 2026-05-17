@@ -13,7 +13,7 @@ class RawPricesReport(Base):
     report_date: Mapped[date] = mapped_column(Date)
     errors: Mapped[str] = mapped_column(String, nullable=True)
     warnings: Mapped[str] = mapped_column(String, nullable=True)
-    offer_id: Mapped[int] = mapped_column(Integer, nullable=False)
+    offer_id: Mapped[str] = mapped_column(String, nullable=False)
     offer_name: Mapped[str] = mapped_column(String, nullable=True)
     basic_price: Mapped[int] = mapped_column(Integer, nullable=True)
     basic_discount_base: Mapped[int] = mapped_column(Integer, nullable=True)

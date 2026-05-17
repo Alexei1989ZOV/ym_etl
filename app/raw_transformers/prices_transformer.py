@@ -37,7 +37,7 @@ class PricesCSVTransformer(BaseCSVTransformer):
 
         for _, row in df.iterrows():
             data = {
-                "day": self._extract_date()
+                "report_date": self._extract_date()
             }
 
             for csv_col, cfg in self.config.items():
