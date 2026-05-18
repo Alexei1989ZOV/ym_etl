@@ -84,17 +84,24 @@ class FileManager:
 
     def cleanup_extracted_dir(self, report: BaseReport, archive_path: Path) -> None:
         """
-        Удаляет всю распакованную директорию с файлами.
-
+        Удаляет распакованную директорию и исходный ZIP-архив.
         Args:
             report: Объект отчета (для определения типа)
             archive_path: Путь к архиву (по нему определяется имя директории)
         """
-        target_dir = self.processed_dir / report.report_type / archive_path.stem
+        processed_dir = self.processed_dir / report.report_type / archive_path.stem
+        raw_zip_file = self.raw_dir / report.report_type / archive_path.name  # ← файл, не папка!
+        
         try:
-            if target_dir.exists():
-                shutil.rmtree(target_dir)
-                logger.debug(f"[CLEANUP] Удалена директория: {target_dir}")
+            if processed_dir.exists():
+                shutil.rmtree(processed_dir)
+                logger.debug(f"[CLEANUP] Удалена директория: {processed_dir}")
+                
+            if raw_zip_file.exists():
+                raw_zip_file.unlink()  # ← удаление файла
+                logger.debug(f"[CLEANUP] Удалён архив: {raw_zip_file}")
+                
         except Exception as e:
-            logger.error(f"[CLEANUP] Ошибка при удалении {target_dir}: {e}")
-
+            logger.error(f"[CLEANUP] Ошибка при удалении: {e}")
+    
+        

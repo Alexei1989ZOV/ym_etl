@@ -1,6 +1,4 @@
 from datetime import date
-
-import logging
 from app.configs.settings import settings
 from app.storage.database import SessionLocal
 from app.core.date_manager import DateManager
@@ -10,42 +8,40 @@ from app.processing.file_manager import FileManager
 from app.core.pipeline import ReportPipeline
 from app.api.report_client import ReportAPIClient
 from app.storage.repositories.raw_prices_repository import RawPricesRepository
+from app.configs.logger_settings import setup_logging, get_logger
 
-logging.basicConfig(
-        level=logging.INFO,
-        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-    )
-logger = logging.getLogger(__name__)
 
 def main():
-
-    # 1️⃣ Подключение к БД
+    setup_logging()
+    logger = get_logger("raw_prices")
+    
+    logger.info("[RAW PRICES] Запуск загрузки отчета по ценам")
     session = SessionLocal()
 
-    # 2️⃣ Менеджер дат (начало с конкретной даты, по умолчанию до вчера)
+    # Менеджер дат (начало с конкретной даты, по умолчанию до вчера)
     date_manager = DateManager(
 
     )
 
-    # 3️⃣ Файловый менеджер
+    # Файловый менеджер
     file_manager = FileManager(
         raw_dir=settings.temp_dir,
         processed_dir=settings.reports_dir,
     )
 
-    # 4️⃣ API клиент
+    # API клиент
     api_client = ReportAPIClient(
         api_key=settings.api_key,
         business_id=settings.business_id,   # обязательно
         campaign_id=settings.campaign_id,   # можно None
     )
 
-    # 5️⃣ Pipeline для отчёта
+    # Pipeline для отчёта
     report_pipeline = ReportPipeline(
         api_client=api_client,
     )
 
-    # 6️⃣ ETL пайплайн
+    # ETL пайплайн
     etl_pipeline = PricesETLPipeline(
         session=session,
         file_manager=file_manager,
@@ -54,7 +50,7 @@ def main():
 
     repository = RawPricesRepository(session)
 
-    # 7️⃣ Оркестратор
+    # Оркестратор
     orchestrator = RawPricesOrchestrator(
         etl_pipeline=etl_pipeline,
         repository=repository,
@@ -63,13 +59,13 @@ def main():
         skip_if_exists=True
     )
 
-    # 8️⃣ Пробегаем по всем датам и запускаем
+    # Пробегаем по всем датам и запускаем
     for run_date in date_manager.get_dates():
         try:
             orchestrator.run_for_date(run_date)
-            logger.info(f"Отчет за {run_date} загружен")
+            logger.info(f"[RAW PRICES] Отчет за {run_date} загружен")
         except Exception as e:
-            logger.error(f"Ошибка при загрузке отчета за {run_date} : {e}")
+            logger.error(f"[RAW PRICES] Ошибка при загрузке отчета за {run_date} : {e}")
             continue
 
 if __name__ == "__main__":
