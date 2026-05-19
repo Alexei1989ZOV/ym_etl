@@ -228,3 +228,9 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Ansible vault files
+host_vars/
+*.vault
+vault.key
+.vault_pass

@@ -36,3 +36,7 @@ docker-compose.yml
 # Проект
 data/
 logs/
+
+.gitlab/
+ansible/
+docs/
