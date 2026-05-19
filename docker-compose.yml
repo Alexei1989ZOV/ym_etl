@@ -22,9 +22,9 @@ services:
     stdin_open: true 
     environment:
       DB_DSN: postgresql://alex:Xby6d4g3@postgres:5432/ymdb
-      YANDEX_API_KEY: ${YANDEX_API_KEY}
-      YANDEX_BUSINESS_ID: ${YANDEX_BUSINESS_ID}
-      YANDEX_CAMPAIGN_ID: ${YANDEX_CAMPAIGN_ID}
+      YM_API_KEY: ${YM_API_KEY}
+      YM_BUSINESS_ID: ${YM_BUSINESS_ID}
+      YM_CAMPAIGN_ID: ${YM_CAMPAIGN_ID}
       LOG_LEVEL: INFO
     depends_on:
       - postgres
