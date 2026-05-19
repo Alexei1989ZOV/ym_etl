@@ -1,0 +1,10 @@
+---
+  all:
+    vars:
+      env: "prod"
+      vm_name: "dek"
+    children:
+      vms:
+        hosts:
+          dek:
+            ansible_host: dek.corp.samsonopt.ru

@@ -1,0 +1,6 @@
+# подключаем шаблон пайплайна из эталонного репозитория
+# не забудь использовать обновленный ci_cd_for_scripts\ansible\copy-docker-image.yml
+include:
+  - project: 'dek/other/ci_cd_for_scripts'
+    ref: master
+    file: '/templates/gitlab_ci_full.yml'

@@ -1,18 +1,20 @@
-# 1. Базовый образ (лучше всего использовать slim версии)
 FROM python:3.13-slim
 
-# 2. Установка переменной окружения (отключает буферизацию логов)
-ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
 
-# 3. Рабочая директория внутри контейнера
 WORKDIR /app
 
-# 4. Копируем файл зависимостей ПЕРВЫМ (для кэширования слоев)
+# Зависимости
 COPY requirements.txt .
-
-# 5. Установка зависимостей (без сохранения кэша pip для уменьшения веса)
 RUN pip install --no-cache-dir -r requirements.txt
 
-# 6. Копируем весь остальной код проекта
-COPY . .
+# Код проекта
+COPY app ./app
 
+# VCS метка
+ARG VCS_REF
+LABEL org.opencontainers.image.revision=$VCS_REF
+
+# Точка входа для Airflow DockerOperator
+ENTRYPOINT ["python"]

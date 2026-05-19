@@ -1,0 +1,32 @@
+##########################################################################
+#                             Shared config
+###########################################################################
+# переменные
+#   - engine_user
+#   - engine_password
+#   - ad_admin_user
+#   - ad_admin_password
+# должны быть прописаны в host_vars/localhost.yml и шифрованы ansible-vault
+############################################################################
+# engine_user: ""
+# engine_password: ""
+
+vault_address: https://vault.corp.samsonopt.ru:8200
+
+ansible_user: "{{ engine_user }}"
+# ansible_password: "{{ engine_password }}"
+# Заглушка, пароль нигде не используется (не должен во всяком случае)
+ansible_password: "1234567890"
+
+vm_ip_dns_servers: "10.36.105.60 10.136.0.251 10.36.103.251"  # обязательно три сервера , иначе приедет мусор из шаблона
+vm_ip_dns_search: "corp.samsonopt.ru"
+
+#ovirt_vm_name: "{{ vm_hostname }}"
+authorized_ssh_keys: "{{ lookup('file', '~/.ssh/id_rsa.pub' ) }}"
+#END
+
+
+apt_disable_cert_verification: false
+
+use_git_repos: false
+airflow_git_repos: ssh://git@gitlab.corp.samsonopt.ru:2222/dek/airflow_project.git

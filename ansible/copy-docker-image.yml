@@ -1,0 +1,44 @@
+---
+- name: Copy image tar, load, retag by факту загрузки
+  hosts: vms
+  gather_facts: true
+
+  vars_files:
+    - group_vars/all.yml
+
+  tasks:
+    - name: Create tmp dir
+      ansible.builtin.file:
+        path: "/home/{{ ansible_user }}/tmp"
+        state: directory
+
+    - name: Copy tar to server
+      ansible.builtin.copy:
+        src: "{{ project_name }}.tar"
+        dest: "/home/{{ ansible_user }}/tmp/{{ project_name }}.tar"
+
+    - name: Load image from tar
+      community.docker.docker_image_load:
+        path: "/home/{{ ansible_user }}/tmp/{{ project_name }}.tar"
+      register: loaded
+
+    - name: Retag loaded image to short local name
+      ansible.builtin.command: >
+        docker tag {{ loaded.image_names[0] }} {{ project_name }}:latest
+      when: loaded.image_names is defined and loaded.image_names | length > 0
+
+    - name: Remove original loaded tag (so no duplicate rows in docker image ls)
+      ansible.builtin.command: >
+        docker rmi {{ loaded.image_names[0] }}
+      when: loaded.image_names is defined and loaded.image_names | length > 0
+
+    - name: Remove tar
+      ansible.builtin.file:
+        path: "/home/{{ ansible_user }}/tmp/{{ project_name }}.tar"
+        state: absent
+
+    - name: Remove dangling images only (<none>:<none>)
+      ansible.builtin.shell: |
+        docker rmi $(docker images -q -f "dangling=true") 2>/dev/null || true
+      args:
+        executable: /bin/bash

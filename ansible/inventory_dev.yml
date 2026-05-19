@@ -1,0 +1,10 @@
+---
+  all:
+    vars:
+      env: "dev"
+      vm_name: "dek-dev"
+    children:
+      vms:
+        hosts:
+          dek-dev:
+            ansible_host: dek-dev.infodit.ru
