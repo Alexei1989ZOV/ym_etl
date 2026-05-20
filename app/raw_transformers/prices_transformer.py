@@ -30,7 +30,7 @@ class PricesCSVTransformer(BaseCSVTransformer):
         Returns:
             список объектов модели RawPricesReport
         """
-        logger.info(f"Начало трансформации prices из {self.csv_path.name}")
+        logger.info(f"[RAW PRICES] Начало трансформации prices из {self.csv_path.name}")
         df = self.read_csv()
         self._validate_columns(df)
         records: list[RawPricesReport] = []
@@ -51,7 +51,7 @@ class PricesCSVTransformer(BaseCSVTransformer):
                 data[field] = self._cast(value, cfg["type"])
 
             records.append(RawPricesReport(**data))
-        logger.info(f"Трансформация prices выполнена. Подготовлено {len(records)} записей")
+        logger.info(f"[RAW PRICES] Трансформация prices выполнена. Подготовлено {len(records)} записей")
         return records
 
     def _validate_columns(self, df: pd.DataFrame) -> None:
@@ -64,7 +64,7 @@ class PricesCSVTransformer(BaseCSVTransformer):
         """
         missing = set(self.config.keys()) - set(df.columns)
         if missing:
-            logger.error(f"[prices] Отсутствуют необходимые колонки в CSV: {missing}")
+            logger.error(f"[RAW PRICES] Отсутствуют необходимые колонки в CSV: {missing}")
             raise ValueError(f"Отсутствуют колонки в CSV: {missing}")
 
     def _extract_date(self):

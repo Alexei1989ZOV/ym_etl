@@ -19,7 +19,7 @@ class BaseAPIClient:
         """
         Инициализирует сессию и загружает настройки из Settings.
         """
-        self.api_key = settings.api_key
+        self.api_key = settings.api_key.get_secret_value()
         self.business_id = settings.business_id
         self.campaign_id = settings.campaign_id
         self.base_url = "https://api.partner.market.yandex.ru/v2"
