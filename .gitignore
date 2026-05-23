@@ -234,5 +234,4 @@ host_vars/
 *.vault
 vault.key
 .vault_pass
-
 docker-compose.yml
