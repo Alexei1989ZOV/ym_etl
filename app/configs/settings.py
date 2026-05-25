@@ -8,9 +8,9 @@ DB_FILE = BASE_DIR / "test_yandex_market.db"  # один файл для все�
 
 
 class Settings(BaseSettings):
-    api_key: str = Field(..., alias="YANDEX_API_KEY")
-    business_id: int = Field(..., alias="YANDEX_BUSINESS_ID")
-    campaign_id: int = Field(..., alias="YANDEX_CAMPAIGN_ID")
+    api_key: str = Field(..., alias="YM_API_KEY")
+    business_id: int = Field(..., alias="YM_BUSINESS_ID")
+    campaign_id: int = Field(..., alias="YM_CAMPAIGN_ID")
 
     database_url: str = Field(f"sqlite:///{DB_FILE}", alias="DB_DSN")
 
