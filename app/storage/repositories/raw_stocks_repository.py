@@ -53,7 +53,7 @@ class RawStocksRepository:
         logger.debug(f"Удаляем данные за {target_date} из таблицы raw_stocks.")
         try:
             self.session.query(RawStocksReport).filter(
-                RawStocksReport.day == target_date
+                RawStocksReport.report_date == target_date
             ).delete(synchronize_session=False)
             logger.debug(
                 f"Данные за {target_date} удалены из таблицы raw_stocks. Количество записей: {self.count_by_date(target_date)}")
@@ -73,7 +73,7 @@ class RawStocksRepository:
         """
         try:
             return self.session.query(RawStocksReport).filter(
-                RawStocksReport.day == target_date
+                RawStocksReport.report_date == target_date
             ).count()
         except Exception as e:
             raise IOError(f"Ошибка при получении количества записей в таблице raw_stocks за {target_date}: {e}")

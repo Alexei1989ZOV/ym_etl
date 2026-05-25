@@ -30,14 +30,14 @@ class StocksCSVTransformer(BaseCSVTransformer):
         Returns:
             список объектов модели RawStocksReport
         """
-        logger.info(f"Начало трансформации stocks_report из {self.csv_path.name}")
+        logger.debug(f"[RAW STOCKS] Начало трансформации {self.csv_path.name}")
         df = self.read_csv()
         self._validate_columns(df)
         records: list[RawStocksReport] = []
 
         for _, row in df.iterrows():
             data = {
-                "day": self._extract_date()
+                "report_date": self._extract_date()
             }
 
             for csv_col, cfg in self.config.items():
@@ -51,7 +51,7 @@ class StocksCSVTransformer(BaseCSVTransformer):
                 data[field] = self._cast(value, cfg["type"])
 
             records.append(RawStocksReport(**data))
-        logger.info(f"Трансформация stocks_report выполнена. Подготовлено {len(records)} записей")
+        logger.debug(f"[RAW STOCKS] Трансформация выполнена. Подготовлено {len(records)} записей")
         return records
 
     def _validate_columns(self, df: pd.DataFrame) -> None:

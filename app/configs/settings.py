@@ -25,7 +25,7 @@ class Settings(BaseSettings):
     db_password: SecretStr = Field(..., alias="DB_PASSWORD")    
     
     model_config = SettingsConfigDict(
-        #env_file=BASE_DIR / ".env",
+        env_file=BASE_DIR / ".env",
         env_file_encoding="utf-8",
         extra="ignore"
     )

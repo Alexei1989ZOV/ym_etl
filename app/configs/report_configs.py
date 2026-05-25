@@ -56,7 +56,7 @@ TRANSFORM_CONFIGS = {
             "WIDTH": {"field_name": "width", "type": int, "nullable": False},
             "HEIGHT": {"field_name": "height", "type": int, "nullable": False},
             "WEIGHT": {"field_name": "weight", "type": Decimal, "nullable": False},
-            "WAREHOUSE": {"field_name": "warehouse", "type": str, "nullable": True},
+            "WAREHOUSE": {"field_name": "warehouse_name", "type": str, "nullable": True},
             "SELLING_STATUS": {"field_name": "selling_status", "type": str, "nullable": True},
             "RECOMMENDATIONS": {"field_name": "recommendations", "type": str, "nullable": True},
             "TURNOVER": {"field_name": "turnover", "type": str, "nullable": False}

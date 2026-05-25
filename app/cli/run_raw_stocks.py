@@ -24,8 +24,8 @@ def main():
 
     # 2️⃣ Менеджер дат (начало с конкретной даты, по умолчанию до вчера)
     date_manager = DateManager(
-        start_date=date(2026, 4, 1)
-        #end_date=date(2025, 2, 2),
+        start_date=date(2026, 5, 25),
+        end_date=date(2026, 5, 25),
     )
 
     # 3️⃣ Файловый менеджер
@@ -61,7 +61,7 @@ def main():
         repository=repository,
         start_date=date_manager.start_date,
         end_date=date_manager.end_date,
-        skip_if_exists=True
+        skip_if_exists=False
     )
 
     # 8️⃣ Пробегаем по всем датам и запускаем
