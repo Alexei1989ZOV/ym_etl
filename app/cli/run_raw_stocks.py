@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, timedelta, datetime
 
 import logging
 from app.configs.settings import settings
@@ -24,8 +24,8 @@ def main():
 
     # 2️⃣ Менеджер дат (начало с конкретной даты, по умолчанию до вчера)
     date_manager = DateManager(
-        start_date=date(2026, 4, 1)
-        #end_date=date(2025, 2, 2),
+        start_date=(datetime.now() - timedelta(days=1)).date(),
+        end_date=datetime.now().date(),
     )
 
     # 3️⃣ Файловый менеджер
