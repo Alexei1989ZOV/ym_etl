@@ -55,29 +55,29 @@ def main():
     logger = get_logger("raw_goods_movement")
     logger.debug(f"Установлен уровень логирования: {args.log_level}")
     
-    # 1️⃣ Подключение к БД
+    # Подключение к БД
     session = SessionLocal()
 
     
-    # 3️⃣ Файловый менеджер
+    # Файловый менеджер
     file_manager = FileManager(
         raw_dir=settings.temp_dir,
         processed_dir=settings.reports_dir,
     )
 
-    # 4️⃣ API клиент
+    # API клиент
     api_client = ReportAPIClient(
         api_key=settings.api_key,
         business_id=settings.business_id,   # обязательно
         campaign_id=settings.campaign_id,   # можно None
     )
 
-    # 5️⃣ Pipeline для отчёта
+    # Pipeline для отчёта
     report_pipeline = ReportPipeline(
         api_client=api_client,
     )
 
-    # 6️⃣ ETL пайплайн
+    # ETL пайплайн
     etl_pipeline = GoodsMovementETLPipeline(
         session=session,
         file_manager=file_manager,
@@ -86,7 +86,7 @@ def main():
 
     repository = RawGoodsMovementRepository(session)
 
-    # 7️⃣ Оркестратор
+    # Оркестратор
     orchestrator = RawGoodsMovementOrchestrator(
         etl_pipeline=etl_pipeline,
         repository=repository,
@@ -95,12 +95,13 @@ def main():
         skip_if_exists=args.skip_if_exists
     )
 
-    # 8️⃣ Пробегаем по всем датам и запускаем
+    # запускаем
     try:
         orchestrator.run_for_date(run_date)
         logger.info(f"Отчет за {run_date} загружен")
     except Exception as e:
         logger.error(f"Ошибка при загрузке отчета за {run_date} : {e}", exc_info=True)
+        raise
     finally:
         session.close()
             

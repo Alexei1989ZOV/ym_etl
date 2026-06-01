@@ -101,7 +101,8 @@ def main():
         orchestrator.run_for_date(run_date)
         logger.info(f"[RAW STOCKS] Отчет за {run_date} загружен")
     except Exception as e:
-        logger.error(f"[RAW STOCKS] Ошибка при загрузке отчета за {run_date} : {e}")
+        logger.error(f"[RAW STOCKS] Ошибка при загрузке отчета за {run_date} : {e}", exc_info=True)
+        raise
     finally:
         session.close()
     
