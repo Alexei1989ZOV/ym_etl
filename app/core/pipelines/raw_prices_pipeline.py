@@ -67,7 +67,7 @@ class PricesETLPipeline:
                 all_records.extend(records)
 
             if not all_records:
-                logger.error(f"[RAW PRICES] Нет данных за {report_date}")  # для лога
+                logger.error(f"[RAW PRICES] Нет данных за {report_date}")
                 return
 
             logger.info(f"[RAW PRICES] удаляем данные за {report_date} из БД если они есть.")

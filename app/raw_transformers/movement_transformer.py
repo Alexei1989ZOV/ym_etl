@@ -30,7 +30,7 @@ class GoodsMovementCSVTransformer(BaseCSVTransformer):
         Returns:
             список объектов модели RawGoodsMovementReport
         """
-        logger.info(f"Начало трансформации goods_movement из {self.csv_path.name}")
+        logger.info(f"[RAW GOODS MOVEMENT] Начало трансформации goods_movement из {self.csv_path.name}")
         df = self.read_csv()
         self._validate_columns(df)
         records: list[RawGoodsMovementReport] = []
@@ -51,7 +51,7 @@ class GoodsMovementCSVTransformer(BaseCSVTransformer):
                 data[field] = self._cast(value, cfg["type"])
 
             records.append(RawGoodsMovementReport(**data))
-        logger.info(f"Трансформация goods_movement выполнена. Подготовлено {len(records)} записей")
+        logger.info(f"[RAW GOODS MOVEMENT] Трансформация goods_movement выполнена. Подготовлено {len(records)} записей")
         return records
 
     def _validate_columns(self, df: pd.DataFrame) -> None:
@@ -64,7 +64,7 @@ class GoodsMovementCSVTransformer(BaseCSVTransformer):
         """
         missing = set(self.config.keys()) - set(df.columns)
         if missing:
-            logger.error(f"[goods_movement] Отсутствуют необходимые колонки в CSV: {missing}")
+            logger.error(f"[RAW GOODS MOVEMENT] Отсутствуют необходимые колонки в CSV: {missing}")
             raise ValueError(f"Отсутствуют колонки в CSV: {missing}")
 
     def _extract_date(self):
@@ -76,16 +76,16 @@ class GoodsMovementCSVTransformer(BaseCSVTransformer):
         Raises:
             ValueError: Если по каким-либо причинам дата не содержится в имени файла.
         """
-        logger.debug(f"Извлечение даты из имени файла: {self.csv_path.name}")
+        logger.debug(f"[RAW GOODS MOVEMENT] Извлечение даты из имени файла: {self.csv_path.name}")
         name = self.csv_path.stem
         try:
             # Ищем дату в имени CSV (формат: ..._ГГГГ-ММ-ДД.csv)
             # Берем предпоследний элемент после split('_') — это дата
             date = datetime.strptime(name.split('_')[-1], '%Y-%m-%d')
-            logger.debug(f"[goods_movement] Извлечена дата из имени CSV: {date}")
+            logger.debug(f"[RAW GOODS MOVEMENT] Извлечена дата из имени CSV: {date}")
             return date
         except:
-            logger.error(f"[goods_movement] Не удалось извлечь дату из имени файла: {name}")
+            logger.error(f"[RAW GOODS MOVEMENT] Не удалось извлечь дату из имени файла: {name}")
             raise ValueError(f"В имени файла не содержится дата: {name}")
 
     @staticmethod
