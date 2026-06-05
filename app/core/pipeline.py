@@ -17,10 +17,10 @@ class ReportPipeline:
 
         # Создаем лимитеры для разных отчетов
         self.limiters = {
-            "sales": RateLimiter(max_requests=10),  # 10 в час
-            "stocks": RateLimiter(max_requests=100),  # 100 в час
-            "goods_movement": RateLimiter(max_requests=100),  # 100 в час
-            "prices": RateLimiter(max_requests=100),  # 100 в час
+            "sales": RateLimiter(max_requests=1, period_seconds=600),  # 1 запрос в 10 минут
+            "stocks": RateLimiter(max_requests=1, period_seconds=120),  # 1 запрос в 2 минуты
+            "goods_movement": RateLimiter(max_requests=1, period_seconds=120),  # 1 запрос в 2 минуты
+            "prices": RateLimiter(max_requests=1, period_seconds=120),  # # 1 запрос в 2 минуты
             "orders_info" : RateLimiter(max_requests=10000) # 10_000 в час
         }
 
